@@ -31,7 +31,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/bus', function(req,res,next){
 
-	var BusStopCode = req.query.BusStopCode
+	var BusStopCode = req.query.BusStopCode	//1619
 	console.log(BusStopCode)
 	request
 		//.get('http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=83139')
@@ -42,12 +42,10 @@ router.get('/bus', function(req,res,next){
 		 if (err || !data.ok) {
 		   console.log('Oh no! error');
 		 } else {
-		   	//console.log('yay got ' + JSON.stringify(data.body));
+		   	console.log("data body is ", data.body);
 		 	res.json(data.body)
 		 }
 	});
-
-
 	
 })
 
@@ -58,7 +56,7 @@ router.post('/email', function(req,res,next){
 	var mailOptions = {
 	  from: 'noreply@dinkevents.com',
 	  to: req.body.emailPost,
-	  subject: 'HPB Healthy Living Recipe',
+	  subject: req.body.subjectPost,
 	  text: req.body.messagePost,
 
       attachments: [
