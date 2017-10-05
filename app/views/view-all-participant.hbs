@@ -2,14 +2,16 @@
 
 <table>
 	<tr>
+		<th>Time</th>
 		<th>Email</th>
 		<th>Recipe</th>
 	</tr>
 	
 	{{#each models}}
 		<tr>
-			<td>{{this.email}}</td>
-			<td>{{this.recipe}}</td>
+			<td class="participant-tr">{{this.time}}</td>
+			<td class="participant-tr">{{this.email}}</td>
+			<td class="participant-tr">{{this.recipe}}</td>
 		</tr>
 	{{/each}}
 
