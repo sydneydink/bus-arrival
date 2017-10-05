@@ -1,0 +1,16 @@
+<h1> All {{modelName}} </h1>
+
+<table>
+	<tr>
+		<th>Email</th>
+		<th>Recipe</th>
+	</tr>
+	
+	{{#each models}}
+		<tr>
+			<td>{{this.email}}</td>
+			<td>{{this.recipe}}</td>
+		</tr>
+	{{/each}}
+
+</table>

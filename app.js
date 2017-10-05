@@ -18,6 +18,7 @@ var cors = require('cors')
 mongoose.connect(config.mongodb);
 require('./app/models/user');
 require('./app/models/product');
+require('./app/models/participant');
 
 /*******************************/
 /******** Main App *************/

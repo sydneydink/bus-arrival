@@ -1,8 +1,11 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 var nodemailer = require('nodemailer');
 var fetch = require('isomorphic-fetch');
 var request = require('superagent');
+
+var Participant = mongoose.model('Participant');
 
 var transporter = nodemailer.createTransport({
     host: 'mail.dinkevents.com',
@@ -23,6 +26,8 @@ var transporter = nodemailer.createTransport({
 router.use('/', require('./middleware.js'))
 router.use('/user', require('./users.js'));
 router.use('/product', require('./product.js'));
+router.use('/participant', require('./participant.js'));
+
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -53,6 +58,7 @@ router.post('/email', function(req,res,next){
 
 	console.log('req.body is ', req.body)
 
+
 	var mailOptions = {
 	  from: 'noreply@dinkevents.com',
 	  to: req.body.emailPost,
@@ -69,49 +75,32 @@ router.post('/email', function(req,res,next){
 	};
 	
 	transporter.sendMail(mailOptions, function(error, info){
+	  
 	  if (error) {
+
 	    console.log(error);
+	    return next(err);
+
 	  } else {
 	    console.log('Email sent: ' + info.response);
-	    res.send(true)
+
+	    //save the participant when successful.
+    	var participant = new Participant({
+			email: req.body.emailPost,
+			recipe: req.body.recipePost
+		});
+
+		participant.save(function(err){
+			if(err){return next(err);}
+			//return true if successful.
+			res.send(true)
+		});
+	    
 	  }
 	});
 
 })
-router.post('/korean-tourism-test', function(req,res,next){
-	res.json({message:JSON.stringify(req.body)})
-})
 
-router.post('/korean-tourism-email', function(req,res,next){
-
-	if(req.body.emailPost){
-		console.log('req.body is ', req.body)
-
-		var mailOptions = {
-		  from: 'noreply@dinkevents.com',
-		  to: req.body.emailPost,
-		  subject: 'Korea Tourism',
-		  html: `
-		  <b> Hello World </b>
-		  <div> <p> Hi Hi ${req.body.emailPost}</p></div>
-		  <img src=${req.body.imgPost} />
-		  `
-		};
-		
-		transporter.sendMail(mailOptions, function(error, info){
-		  if (error) {
-		    console.log(error);
-		  } else {
-		    console.log('Email sent: ' + info.response);
-		    res.json({status: "success"})
-		  }
-		});
-
-	} else {
-		res.json({status:"nothing"})
-	}
-
-})
 // Catch all for 404 error.
 router.use(function(req,res,next){
 	console.log ('call error');
